@@ -9,6 +9,7 @@ import com.nexeo.kata.checked.exception.InvalidRequestedMoney;
 import com.nexeo.kata.configuration.Config;
 import com.nexeo.kata.services.IDepositAccountService;
 import com.nexeo.kata.services.IOperationsHistoryService;
+
 /**
  * 
  * @author yahyaoui
@@ -16,9 +17,13 @@ import com.nexeo.kata.services.IOperationsHistoryService;
  */
 public class KataDemo {
 
-	public static void main(String[] args) throws InsufficientBalanceException, InvalidAccountException, InvalidRequestedMoney {
+	public static void main(String[] args)
+			throws InsufficientBalanceException, InvalidAccountException, InvalidRequestedMoney {
 		ApplicationContext applicationContext = new AnnotationConfigApplicationContext(Config.class);
 		IDepositAccountService bean = applicationContext.getBean(IDepositAccountService.class);
-		System.out.println(bean.depositMoney(0, null));
+		// Seif TODO use files to create a visible demo, or for a better demo
+		// develop an angular 4 application with simple interfaces just for simple
+		// workflow deposit, withdrawal, consult history of operations
+		
 	}
 }
