@@ -6,13 +6,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-
-@MappedSuperclass
 /**
  * 
  * @author yahyaoui
  *
  */
+@MappedSuperclass
 public abstract class BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;

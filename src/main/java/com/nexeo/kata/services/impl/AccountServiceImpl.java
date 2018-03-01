@@ -11,21 +11,38 @@ import com.nexeo.kata.checked.exception.InvalidRequestedMoney;
 import com.nexeo.kata.model.Account;
 import com.nexeo.kata.model.Operation;
 import com.nexeo.kata.model.OperationHistory;
-import com.nexeo.kata.services.IWithdrawalAccountService;
+import com.nexeo.kata.services.IAccountService;
 import com.nexeo.kata.services.dao.AccountRepository;
 import com.nexeo.kata.services.dao.OperationHistoryRepository;
 /**
  * 
- * @author yahyaoui
+ * @author seif
  *
  */
 @Service
-public class WithdrawalAccountServiceImpl implements IWithdrawalAccountService{
-
+public class AccountServiceImpl implements IAccountService{
 	@Autowired
 	private AccountRepository accountRepository;
 	@Autowired
 	private OperationHistoryRepository historyRepository;
+	
+	public boolean depositMoney(double money, Long accountID)
+			throws InsufficientBalanceException, InvalidAccountException, InvalidRequestedMoney {
+		if(money <= 0){
+			throw new InvalidRequestedMoney();
+		}
+		if(this.accountRepository.findOne(accountID)==null){
+			throw new InvalidAccountException();
+		}
+		Account account = this.accountRepository.findOne(accountID);
+		double ammount = account.getBalance();
+		double res = ammount + money;
+		account.setBalance(res);
+		this.accountRepository.save(account);
+		saveHistory(account, money, Operation.Deposit);
+		return true;
+	}
+	
 	public boolean withdrawalMoney(double money, Long accountID)
 			throws InsufficientBalanceException, InvalidAccountException, InvalidRequestedMoney {
 			if(money <= 0){
@@ -42,14 +59,24 @@ public class WithdrawalAccountServiceImpl implements IWithdrawalAccountService{
 			}
 			account.setBalance(res);
 			this.accountRepository.save(account);
-			// Seif TODO use spring AOP instead hard coding the logging actions!!
-			saveWithdrawalHistory(account, money);
+			saveHistory(account, money, Operation.Withdrawal);
 			return true;
 	}
+
+	public Account saveAccount(Account account){
+		return this.accountRepository.save(account);
+	}
 	
-	private void saveWithdrawalHistory(Account account, double ammount){ 
+	public Account findByAccountID(Long accountId){
+		return this.accountRepository.findOne(accountId);
+	}
+	
+	
+	
+	
+	private void saveHistory(Account account, double ammount, Operation operation){ 
 		OperationHistory operationHistory = new OperationHistory();
-		operationHistory.setOperation(Operation.Withdrawal);
+		operationHistory.setOperation(operation);
 		operationHistory.setOperationDateTime(LocalDateTime.now());
 		operationHistory.setAmmount(ammount);
 		operationHistory.setAccount(account);

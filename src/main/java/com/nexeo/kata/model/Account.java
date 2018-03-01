@@ -6,14 +6,13 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-@Entity
-@Table(name = "account")
 /**
  * 
  * @author yahyaoui
  *
  */
+@Entity
+@Table(name = "account")
 public class Account extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 

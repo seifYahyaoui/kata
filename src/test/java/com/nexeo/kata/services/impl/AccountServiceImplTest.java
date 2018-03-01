@@ -16,17 +16,13 @@ import com.nexeo.kata.checked.exception.InvalidRequestedMoney;
 import com.nexeo.kata.configuration.Config;
 import com.nexeo.kata.model.Account;
 import com.nexeo.kata.model.Client;
-import com.nexeo.kata.services.IDepositAccountService;
-/**
- * 
- * @author yahyaoui
- *
- */
+import com.nexeo.kata.services.IAccountService;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Config.class, loader = AnnotationConfigContextLoader.class)
-public class DepositAccountServiceImplTest {
+public class AccountServiceImplTest {
 	@Autowired
-	private IDepositAccountService accountService;
+	private IAccountService accountService;
 
 	// The valid account that will be used all along the tests
 	private static final Account account = new Account();
@@ -56,7 +52,6 @@ public class DepositAccountServiceImplTest {
 	@Test(expected = InvalidAccountException.class)
 	public final void whenDepositWithInvalidAccountThenExceptionIsThrown()
 			throws InsufficientBalanceException, InvalidAccountException, InvalidRequestedMoney {
-		// Seif: TODO The rib represent the account not the database table ID
 		this.accountService.depositMoney(5, -100l);
 	}
 
@@ -67,8 +62,33 @@ public class DepositAccountServiceImplTest {
 
 		assertEquals(this.accountService.depositMoney(5, account.getId()), true);
 		double ammount = this.accountService.findByAccountID(account.getId()).getBalance();
-		// the account is empty then after adding the 5$ the account must have
-		// 5$ after the operation is finished
 		assertEquals(money, ammount, 0);
+	}
+	
+	@Test(expected = InvalidRequestedMoney.class)
+	public final void whenWithdrawalNegativeMoneyThenExceptionIsThrown()
+			throws InsufficientBalanceException, InvalidAccountException, InvalidRequestedMoney {
+		this.accountService.withdrawalMoney(-5, 1l);
+	}
+
+	@Test(expected = InvalidAccountException.class)
+	public final void whenWithdrawalWithInvalidAccountThenExceptionIsThrown()
+			throws InsufficientBalanceException, InvalidAccountException, InvalidRequestedMoney {
+		this.accountService.withdrawalMoney(5, -100l);
+	}
+
+	@Test(expected= InsufficientBalanceException.class)
+	public final void whenWithdrawalWithValidAccountAndValidMoneyButAnEmptyAccountThenExceptionIsThrown()
+			throws InsufficientBalanceException, InvalidAccountException, InvalidRequestedMoney {
+		assertEquals(this.accountService.withdrawalMoney(5, account.getId()), true);
+	}
+	
+	@Test
+	public final void whenWithdrawalWithValidAccountAndValidMoneyWithAccountThatHoldTheRequestedMoneyThenTestShouldPass()
+			throws InsufficientBalanceException, InvalidAccountException, InvalidRequestedMoney {
+		accountService.depositMoney(10, account.getId());
+		assertEquals(this.accountService.withdrawalMoney(5, account.getId()), true);
+		double ammount = this.accountService.findByAccountID(account.getId()).getBalance();
+		assertEquals(10-5, ammount, 0);
 	}
 }

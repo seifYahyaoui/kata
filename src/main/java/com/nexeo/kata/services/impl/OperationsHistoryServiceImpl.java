@@ -1,6 +1,8 @@
 package com.nexeo.kata.services.impl;
 
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,25 +12,24 @@ import com.nexeo.kata.model.Operation;
 import com.nexeo.kata.model.OperationHistory;
 import com.nexeo.kata.services.IOperationsHistoryService;
 import com.nexeo.kata.services.dao.OperationHistoryRepository;
+
 /**
  * 
  * @author yahyaoui
  *
  */
 @Service
-public class OperationsHistoryServiceImpl implements IOperationsHistoryService{
+public class OperationsHistoryServiceImpl implements IOperationsHistoryService {
 
 	@Autowired
 	private OperationHistoryRepository historyRepository;
-	
-	public Collection<OperationHistory> getHistoryOfDepositOperation(Long accountID) throws InvalidAccountException {
-		// TODO Auto-generated method stub
-		return historyRepository.findByAccountAndOperation(accountID, Operation.Deposit);
-	}
 
-	public Collection<OperationHistory> getHistoryOfWithdrawalOperation(Long accountID) throws InvalidAccountException {
+	public List<OperationHistory> getHistory(Long accountID) throws InvalidAccountException {
 		// TODO Auto-generated method stub
-		return historyRepository.findByAccountAndOperation(accountID, Operation.Withdrawal);
+		 List<OperationHistory> findByAccountAndOperation = historyRepository.findByAccountID(accountID);
+		 Comparator<OperationHistory> comparator = (h1, h2) -> h1.getOperationDateTime().isBefore(h2.getOperationDateTime())? 0 : 1;
+		 Collections.sort(findByAccountAndOperation, comparator);
+		 return findByAccountAndOperation;
 	}
 
 	public void deleteHistory(Long accountId) {

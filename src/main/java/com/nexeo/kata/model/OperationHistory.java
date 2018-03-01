@@ -23,7 +23,7 @@ public class OperationHistory extends BaseEntity {
 
 	@Column(name="operation")
 	@Enumerated(EnumType.STRING)
-	private Operation operation = Operation.Default;
+	private Operation operation;
 	@Column(name = "operation_dateTime")
 	private LocalDateTime operationDateTime;
 	@Column(name = "ammount")

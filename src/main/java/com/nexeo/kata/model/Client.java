@@ -5,14 +5,13 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-@Entity
-@Table(name = "client")
 /**
  * 
  * @author yahyaoui
  *
  */
+@Entity
+@Table(name = "client")
 public class Client extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 	@Column(name = "first_name")
@@ -25,7 +24,6 @@ public class Client extends BaseEntity {
 	private String address;
 
 	@OneToOne(mappedBy="client")
-	// @JoinColumn(name = "account_id")
 	private Account account;
 
 	public String getFirstName() {

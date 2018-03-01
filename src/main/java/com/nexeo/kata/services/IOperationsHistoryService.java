@@ -1,8 +1,9 @@
 package com.nexeo.kata.services;
 
-import java.util.Collection;
+import java.util.List;
 
 import com.nexeo.kata.checked.exception.InvalidAccountException;
+import com.nexeo.kata.model.Operation;
 import com.nexeo.kata.model.OperationHistory;
 /**
  * 
@@ -10,9 +11,7 @@ import com.nexeo.kata.model.OperationHistory;
  *
  */
 public interface IOperationsHistoryService {
-	Collection<OperationHistory> getHistoryOfDepositOperation(Long accountID) throws InvalidAccountException;
-	
-	Collection<OperationHistory> getHistoryOfWithdrawalOperation(Long accountID)throws InvalidAccountException;
+	List<OperationHistory> getHistory(Long accountID) throws InvalidAccountException;
 	
 	void deleteHistory(Long accountId);
 }

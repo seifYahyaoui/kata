@@ -5,7 +5,6 @@ package com.nexeo.kata.model;
  *
  */
 public enum Operation {
-	Default,
 	Deposit,
 	Withdrawal
 }
