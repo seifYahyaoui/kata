@@ -8,13 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nexeo.kata.checked.exception.InvalidAccountException;
-import com.nexeo.kata.model.Operation;
 import com.nexeo.kata.model.OperationHistory;
 import com.nexeo.kata.services.IOperationsHistoryService;
 import com.nexeo.kata.services.dao.OperationHistoryRepository;
 
 /**
- * 
+ *
  * @author yahyaoui
  *
  */
@@ -25,16 +24,9 @@ public class OperationsHistoryServiceImpl implements IOperationsHistoryService {
 	private OperationHistoryRepository historyRepository;
 
 	public List<OperationHistory> getHistory(Long accountID) throws InvalidAccountException {
-		// TODO Auto-generated method stub
 		 List<OperationHistory> findByAccountAndOperation = historyRepository.findByAccountID(accountID);
 		 Comparator<OperationHistory> comparator = (h1, h2) -> h1.getOperationDateTime().isBefore(h2.getOperationDateTime())? 0 : 1;
 		 Collections.sort(findByAccountAndOperation, comparator);
 		 return findByAccountAndOperation;
 	}
-
-	public void deleteHistory(Long accountId) {
-		// TODO Auto-generated method stub
-		historyRepository.deleteAll();
-	}
-
 }
